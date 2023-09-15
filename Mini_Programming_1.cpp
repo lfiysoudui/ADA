@@ -1,22 +1,41 @@
 #include <iostream>
-using namespace std;
+#include <algorithm>
+
+
+int findmax(int a, int b, int c){
+    int tmp = a;
+    if ( b > tmp ) tmp = b;
+    if ( c > tmp ) tmp = c;
+    return tmp;
+}
+
+int findMaxSub (int l, int r, int* head){
+    // std::cout << "( " << l << " , " << r << " )\n";
+    if(l >= r) return head[l];
+    else{
+        int tmpsum = head[(l+r)/2], maxSub = head[(l+r)/2];
+        for(int i = (l+r)/2-1; i >= l ; i--){
+            tmpsum += head[i];
+            if( maxSub < tmpsum ) maxSub = tmpsum;
+        }
+        tmpsum = maxSub;
+        for(int i = (l+r)/2+1; i <=r ; i++){
+            tmpsum += head[i];
+            if( maxSub < tmpsum ) maxSub = tmpsum;
+        }
+        return findmax( findMaxSub(l,(l+r)/2,head), findMaxSub((l+r)/2+1,r,head), maxSub);
+    }
+}
 
 int main (){
-    int nums;
-    cin >> nums;
-    int tmp;
-    if(nums == 0){
-        cout << 0;
-        return 0;
+    int len;
+    std::cin >> len;
+    int* arr = new int[len];
+    for(int i = 0; i < len; i++){
+        std::cin >> arr[i];
     }
-    cin >> tmp;
-    int maxSum = tmp, Sum = tmp;
-    for(int i = 1; i < nums; i++){
-        cin >> tmp;
-        Sum = max(tmp , Sum+tmp);
-        maxSum = max(maxSum , Sum);
-        // cout << "[" << i << "] maxSum = " << maxSum << " Sum = " << Sum << "\n";
-    }
-    cout << maxSum;
+    std::cout << findMaxSub(0,len-1,arr);
+
 }
-// 12 9 -55 -1 47 76 20 -44  12 74
+// 6
+// 1 -2 7 -4 6 -3
