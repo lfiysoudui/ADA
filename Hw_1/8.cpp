@@ -1,40 +1,59 @@
 #include <iostream>
+#include <deque>
+#include <vector>
 #define int long long
 
 using namespace std;
 
 
 
-signed main() {
-    int turns ;
-    cin >> turns;
-    for(int k = 0; k < turns; k++){
-        int length, target;
-        cin >> length >> target;
-        int arr[length];
-        for(int i = 0; i < length; i++){
-            cin >> arr[i];
-        }
+signed main (){
+    cin.tie(0);
+    cout.tie(0);
+    int turns, length, target;
+    deque<int>  deq;
+    vector<int> sum;
 
-        int minlen = length+1;
-        int l = 0, sum = 0;
-        for(int r = 0; r < length; r++){
-            sum += arr[r];
-            if(sum<0){
-                r++;
-                l = r;
-                sum = arr[r];
-            }
-            while (sum >= target && r >= l){
-                // cout << "[r = " << r << " l = " << l << "]\n";
-                minlen = min( minlen, r-l+1 );
-                sum -= arr[l];
-                l++;
-                while (l>0) l--;
-                
-            }
+    cin >> turns;
+    for (int k = 0; k < turns; k++){
+        cin >> length >> target;
+        int ans = length + 1;
+        sum.resize(length+1);
+        sum[0] = 0;
+        for( int i = 1; i <= length; i++){
+            cin >> sum[i];
+            sum[i] += sum[i-1];
         }
-        if(minlen == length+1 ) cout << "-1\n";
-        else cout << minlen <<"\n";
+        for (int i = 0; i <= length; i++){
+            while ( !deq.empty() && sum[i] - sum[deq.front()] >= target){
+                ans = min( ans, i - deq.front());
+                deq.pop_front();
+            }
+            // cerr << i << "[";
+            // for(int i:deq) cerr << i << ",";
+            // cerr << "] ans = " << ans <<" ";
+            // if( !deq.empty()) {
+            //     cerr << ", " <<deq.front() << " = " << sum[deq.front()] << ", ";
+            //     cerr << deq.back() << " = " << sum[deq.back()] <<"\n";
+            // }
+            // else cerr << "\n";
+
+            if( !deq.empty() && sum[i] <= sum[deq.back()]){
+                deq.pop_back();
+            }
+            deq.push_back(i);
+
+        }
+        if(ans > length) cout << -1 << endl;
+        else cout << ans << endl;
+        sum.clear();
+        deq.clear();
+
     }
 }
+
+
+// ref：
+// 蘇翊軒
+// 黃昱凱
+// 黃睿家
