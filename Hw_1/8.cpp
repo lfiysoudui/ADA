@@ -8,8 +8,8 @@ using namespace std;
 
 
 signed main (){
+    ios_base::sync_with_stdio(0);
     cin.tie(0);
-    cout.tie(0);
     int turns, length, target;
     deque<int>  deq;
     vector<int> sum;
@@ -19,7 +19,7 @@ signed main (){
         cin >> length >> target;
         int ans = length + 1;
         sum.resize(length+1);
-        sum[0] = 0;
+        sum[0] = 0ll;
         for( int i = 1; i <= length; i++){
             cin >> sum[i];
             sum[i] += sum[i-1];
@@ -29,23 +29,23 @@ signed main (){
                 ans = min( ans, i - deq.front());
                 deq.pop_front();
             }
-            // cerr << i << "[";
-            // for(int i:deq) cerr << i << ",";
-            // cerr << "] ans = " << ans <<" ";
-            // if( !deq.empty()) {
-            //     cerr << ", " <<deq.front() << " = " << sum[deq.front()] << ", ";
-            //     cerr << deq.back() << " = " << sum[deq.back()] <<"\n";
-            // }
-            // else cerr << "\n";
-
-            if( !deq.empty() && sum[i] <= sum[deq.back()]){
+{
+    // cerr << i << "[";
+    // for(int i:deq) cerr << i << ",";
+    // cerr << "] ans = " << ans <<" ";
+    // if( !deq.empty()) {
+    //     cerr << ", " <<deq.front() << " = " << sum[deq.front()] << ", ";
+    //     cerr << deq.back() << " = " << sum[deq.back()] <<"\n";
+    // }
+    // else cerr << "\n";
+}
+            while( !deq.empty() && sum[i] <= sum[deq.back()]){
                 deq.pop_back();
             }
             deq.push_back(i);
-
         }
-        if(ans > length) cout << -1 << endl;
-        else cout << ans << endl;
+        if(ans > length) cout << -1 << "\n";
+        else cout << ans << "\n";
         sum.clear();
         deq.clear();
 
@@ -57,3 +57,4 @@ signed main (){
 // 蘇翊軒
 // 黃昱凱
 // 黃睿家
+// 巫俋霆
