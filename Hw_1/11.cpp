@@ -4,41 +4,34 @@
 
 using namespace std;
 
-int findmin(int a, int b, int c){
-    int tmp = a;
-    if ( b < tmp ) tmp = b;
-    if ( c < tmp ) tmp = c; 
-    return tmp;
-}
 
-int findMinSub (int l, int r, vector<int>& head){
-    if( l >= r){
-        int tmp = 1 + head[r] * head[r];
-        // cout << "( " << l << " , " << r << " )[" << tmp << "]\n";
+int findMinSub (int l, int r, vector<int>& sum){
+    if(r - l == 1){
+        int tmp = (sum[r] - sum[l]) * (sum[r] - sum[l]) + 1;
+        // cout << "1( " << l << ", " << r<< ") " << tmp << "\n";
+        return tmp;
+    }
+    else if (r - l < 1){
+        int tmp = (sum.front() - sum.back()) * (sum.front() - sum.back()) + size(sum) * size(sum);
+        // cout << "2( " << l << ", " << r<< ") " << tmp << "\n";
         return tmp;
     }
     else{
-        int minSub = head[(l+r)/2] * head[(l+r)/2] + 1, tmpsum = head[(l+r)/2], Lreminder = (l+r)/2, Rreminder = (l+r)/2;
-        int tmp;
-        for(int i = (l+r)/2-1; i >= l ; i--){
-            tmpsum += head[i];
-            tmp = tmpsum * tmpsum + (Rreminder - i + 1)*(Rreminder - i + 1);
-            if( llabs(minSub) > llabs(tmp) ) {
-                minSub = tmp;
-                Lreminder = i;
+        int rmin = findMinSub((l+r)/2+1, r, sum);
+        int lmin = findMinSub(l, (l+r)/2, sum);
+        if(rmin < lmin) swap( rmin, lmin);
+        int minVal = lmin;
+        int lcur = (l+r)/2 - minVal, rcur = (l+r)/2 + minVal;
+        if(lcur < l) lcur = l;
+        if(rcur > r) rcur = r;
+        for(int i = lcur; i < rcur; i++){
+            for(int j = 1; j < 8 && j+i <= rcur; j++){
+                int tmp = (sum[i+j] - sum[i]) * (sum[i+j] - sum[i]) + j*j;
+                if(tmp < minVal ) minVal = tmp;
             }
         }
-        for(int i = (l+r)/2+1; i <=r ; i++){
-            tmpsum += head[i];
-            tmp = tmpsum * tmpsum + (i - Lreminder + 1)*(i - Lreminder + 1);
-            if( llabs(minSub) > llabs(tmp) ) {
-                minSub = tmp;
-                Rreminder = i;
-            }
-        }
-        tmp = findmin( findMinSub(l,(l+r)/2,head), findMinSub((l+r)/2+1,r,head), minSub);
-        // cout << "( " << l << " , " << r << " )[" << tmp << "]\n";
-        return tmp;
+        // cout << "3( " << l << ", " << r<< ") " << minVal << "\n";
+        return minVal;
     }
 }
 
@@ -50,8 +43,10 @@ signed main(){
 
     cin >> length;
     sum.resize(length + 1);
-    for(int i = 0; i < length; i++){
+    sum[0] = 0;
+    for(int i = 1; i <= length; i++){
         cin >> sum[i];
+        sum[i] += sum[i-1];
     }
-    cout << findMinSub(0,length-1,sum);
+    cout << findMinSub(0,length,sum);
 }
