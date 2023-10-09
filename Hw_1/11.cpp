@@ -67,3 +67,8 @@ signed main(){
     }
     cout << findMinSub(0,length,sum);
 }
+
+// ref：
+// ppt
+// 132 官毓韋
+// 013 黃睿家
