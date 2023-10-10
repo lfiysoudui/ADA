@@ -15,21 +15,21 @@ int findsum(int lcur, int l, int brec, int depth){
     
     int sum = 0;
     if( depth == dayk){//sum up
-        printf("(%lld, %lld, %lld, %lld,0)\n", lcur, l, depth, powtwo[depth+1]);
+        // printf("(%lld, %lld, %lld, %lld,0)\n", lcur, l, depth, powtwo[depth+1]);
         for(int i = 0; i < mod; i++)
             sum += (i+brec) % mod * initArr[l%N+1][i];
     }
     else if(l-lcur+1 == powtwo[depth]){//sum upleft
-        printf("(%lld, %lld, %lld, %lld,1)\n", lcur, l, depth, powtwo[depth+1]);
+        // printf("(%lld, %lld, %lld, %lld,1)\n", lcur, l, depth, powtwo[depth+1]);
         for(int i = 0; i < mod; i++)
-            sum += (i+brec) % mod * subSum[depth+1][i];
+            sum += (i+brec) % mod * subSum[depth][i];
     }
     else if(l-lcur+1 > powtwo[depth+1]){//r
-        printf("(%lld, %lld, %lld, %lld,r)\n", lcur, l, depth, powtwo[depth+1]);
-        sum = findsum(0, l, brec, depth+1) + findsum(0+powtwo[depth+1], l, brec+cArr[depth], depth+1);
+        // printf("(%lld, %lld, %lld, %lld,r)\n", lcur, l, depth, powtwo[depth+1]);
+        sum = findsum(0, powtwo[depth+1]-1, brec, depth+1) + findsum(0+powtwo[depth+1], l, brec+cArr[depth], depth+1);
     }
     else if(l-lcur +1 <= powtwo[depth+1]){//l
-        printf("(%lld, %lld, %lld, %lld,l)\n", lcur, l, depth, powtwo[depth+1]);
+        // printf("(%lld, %lld, %lld, %lld,l)\n", lcur, l, depth, powtwo[depth+1]);
         sum = findsum(0, l, brec, depth+1);
     }
     else printf("ERROR\n");
@@ -77,9 +77,7 @@ signed main(){
         cin >> l >> r;
         int sum = 0;
         sum += findsum(0, r, 0, 0);
-        printf("\n%lld\n",sum);
         sum -= findsum(0, l-1, 0, 0);
-        printf("\n%lld\n",sum);
         cout << sum << "\n";
     }
 }
