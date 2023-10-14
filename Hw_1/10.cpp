@@ -15,21 +15,17 @@ int findsum(int lcur, int l, int brec, int depth){
     
     int sum = 0;
     if( depth == dayk){//sum up
-        // printf("(%lld, %lld, %lld, %lld,0)\n", lcur, l, depth, powtwo[depth+1]);
         for(int i = 0; i < mod; i++)
             sum += (i+brec) % mod * initArr[l%N+1][i];
     }
     else if(l-lcur+1 == powtwo[depth]){//sum upleft
-        // printf("(%lld, %lld, %lld, %lld,1)\n", lcur, l, depth, powtwo[depth+1]);
         for(int i = 0; i < mod; i++)
             sum += (i+brec) % mod * subSum[depth][i];
     }
     else if(l-lcur+1 > powtwo[depth+1]){//r
-        // printf("(%lld, %lld, %lld, %lld,r)\n", lcur, l, depth, powtwo[depth+1]);
         sum = findsum(lcur, powtwo[depth+1]-1, brec, depth+1) + findsum(lcur, l-powtwo[depth+1], brec+cArr[depth], depth+1);
     }
     else if(l-lcur +1 <= powtwo[depth+1]){//l
-        // printf("(%lld, %lld, %lld, %lld,l)\n", lcur, l, depth, powtwo[depth+1]);
         sum = findsum(lcur, l, brec, depth+1);
     }
     else printf("ERROR\n");
@@ -63,14 +59,9 @@ signed main(){
         subSum[i] = (int*) malloc((mod)* sizeof(int));
         for(int j = 0; j < mod; j++) subSum[i][j] = subSum[i+1][j];
         for(int j = 0; j < mod; j++) {
-            // printf("%lld dayk,%lld+%lld from %lld\n", i, j, subSum[i+1][(j-cArr[i]+mod)%mod], (j-cArr[i]+mod)%mod);
             subSum[i][j] += subSum[i+1][(j-cArr[i]+mod)%mod];
         }
     }
-    // for(int i = 0; i <= dayk; i++) {
-    //     for(int j = 0; j < mod; j++) printf("%lld ",subSum[i][j]);
-    //     printf("\n");
-    // }
     int buyer, l, r;
     cin >> buyer;
     for(int k = 0; k < buyer; k++) {

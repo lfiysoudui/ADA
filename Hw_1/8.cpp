@@ -29,16 +29,6 @@ signed main (){
                 ans = min( ans, i - deq.front());
                 deq.pop_front();
             }
-{
-    // cerr << i << "[";
-    // for(int i:deq) cerr << i << ",";
-    // cerr << "] ans = " << ans <<" ";
-    // if( !deq.empty()) {
-    //     cerr << ", " <<deq.front() << " = " << sum[deq.front()] << ", ";
-    //     cerr << deq.back() << " = " << sum[deq.back()] <<"\n";
-    // }
-    // else cerr << "\n";
-}
             while( !deq.empty() && sum[i] <= sum[deq.back()]){
                 deq.pop_back();
             }

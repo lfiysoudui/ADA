@@ -12,14 +12,12 @@ using namespace std;
 int findMinSub (int l, int r, vector<int>& sum){
     if(r - l == 1){
         int tmp = (sum[r] - sum[l]) * (sum[r] - sum[l]) + 1;
-        // cout << "1( " << l << ", " << r<< ") " << tmp << "\n";
         return tmp;
     }
     else if (r - l == 2){
         int tmp = (sum[r] - sum[l+1]) * (sum[r] - sum[l+1]) + 1;
         int tmp1 = (sum[r-1] - sum[l]) * (sum[r-1] - sum[l]) + 1;
         int tmp2 = (sum[r] - sum[l]) * (sum[r] - sum[l]) + 4;
-        // cout << "1( " << l << ", " << r<< ") max\n";
         tmp = min(tmp, tmp1);
         tmp = min(tmp, tmp2);
         return tmp;
@@ -40,12 +38,10 @@ int findMinSub (int l, int r, vector<int>& sum){
         vector<pair<int,int>> sumsort;
         for(int i = 0; i < rcur - lcur + 1; i++) sumsort.push_back( make_pair( sum[lcur + i],i));
         sort(sumsort.begin(),sumsort.end());
-        // cout << "3( " << l << ", " << r<< ") bef: " << minVal << "\n";
         for(int i = 0; i < rcur - lcur + 1; i++){
             for(int j = 1; j < 8 && j+i < sumsort.size(); j++){
                 int tmp = (sumsort[i+j].first - sumsort[i].first) * (sumsort[i+j].first - sumsort[i].first) + (sumsort[i+j].second - sumsort[i].second) * (sumsort[i+j].second - sumsort[i].second);
                 if(tmp < minVal ) minVal = tmp;
-                // cout << "3( " << l << ", " << r<< ") in :" << sumsort[i+j]<<"(" <<i+j<< "), " << sumsort[i] << "(" <<i<< ")\n";
             }
         }
         return minVal;

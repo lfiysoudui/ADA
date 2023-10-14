@@ -5,8 +5,8 @@
 using namespace std;
 
 signed main(){
-    // ios_base::sync_with_stdio(0);
-    // cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int y,x;
     scanf("%lld%lld", &y, &x);
     int* price[x+1];
@@ -47,13 +47,6 @@ signed main(){
                 price[i][j] += price[i-1][j];
         }
     }
-    // for(int i = 0; i < y; i++){
-    //     for(int j = 0; j < x; j++){
-    //         printf("%-3lld ", price[j][i]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n");
     printf("%lld", -price[x-1][0]);
 }
 
