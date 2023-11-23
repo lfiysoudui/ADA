@@ -1,3 +1,0 @@
-Since we can always find a n that fulfill log(n) < c*n^{\epsilon} for all \epsilon, the statement in the sixth line (log(n) > c*n^{\epsilon}) is wrong. Since the regular condition can't be satisfied
-, Master Theorem isn't applicable.
-
