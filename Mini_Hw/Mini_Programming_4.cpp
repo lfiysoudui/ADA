@@ -73,28 +73,14 @@ signed main(){
     int sum = 0;
     for (int i = 0; i < n; i++) {
         int u = seq[i].second;
-        // cout << "in " << u << "\n";
         if (!check[u]) {
             int ord = rd;
             rd = dfs(u, revvertice, check, rd);
-            // cout << ord  << ":" << rd << "\n";
             if(rd-ord > 1){
                 sum+= ((rd-ord+1)/2) * ((rd-ord+1)/2 - 1) / 2;
             }
             rd++;
-            // cout << sum << "\n";
         }
-        // for(int j = 0; j < n; j++){
-        //     cout << check[i] << " ";
-        // }
-        // cout << "\n";
     }
     cout << sum << "\n";
-    // for (int i = 0; i < n; i++) {
-    //     cerr << i << ".d = " << revvertice[i].d << " .f = " << revvertice[i].f << "\n";
-    // }
-    // for (int i = 0; i < n; i++) {
-    //     cerr << i << " => " << seq[i].second << "\n";
-    // }
-    // check.resize(n, false);
 }
