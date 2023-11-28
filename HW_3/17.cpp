@@ -1,85 +1,114 @@
 #include <iostream>
 #include <vector>
+#include <climits>
+#define ll long long
+
 using namespace std;
 
-#define ll long long
-typedef struct pairs{
-    ll name;
-    ll dist;
-}pairs;
-typedef struct childs{
-    vector< pairs > child;//first is child number, second is distance
-}childs;
+typedef struct mypair{
+    int name;
+    int dist;
+}mypair;
+typedef struct tripair{
+    int first;
+    int second;
+    int dist;
+}tripair;
 
-ll tmpn;
+typedef struct node{
+    ll distance;
+    int roottree;
+    vector<mypair>child; //first is child, 
+}node;
+typedef struct graphs{
+    int V,E;
+    vector<node> vertice;//first is child number, second is distance
+    vector<tripair> edge;
+}graphs;
 
-ll dfs(ll num, vector<childs> &list, vector<bool> &check, ll parent){
-    // for(int j = 0; j < tmpn; j++){
-    //     cerr << check[j] << " ";
-    // }
-    // cerr << ":"<< num << "\n";
-    if(num == 0) return 0;
-    check[num] = true;
-    ll mindist = -1;
-    for (int i = 0; i < list[num].child.size(); i++) {
-        if (!check[list[num].child[i].name] && list[num].child[i].name != parent) {
-            if(mindist == -1)
-                mindist = dfs(list[num].child[i].name, list, check, num)+list[num].child[i].dist;
-            else
-                mindist = min(mindist, dfs(list[num].child[i].name, list, check, num)+list[num].child[i].dist);
-            // cerr << num << ":" << i << " " << mindist << "\n";
-        }
-    }
-    check[num] = false;
-    return mindist; 
-}
+void relax(int name, graphs& graph);
 
-void push(vector< pairs > lists){
-    
-}
+void printgraph(graphs& graph);
 
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int n, m;
-    vector<bool> check;
-    vector<childs> vertice;
-    cin >> n >> m;
-    tmpn = n;
-    vertice.resize(n);
+    cin >> graph.V >> graph.E;
+    graph.vertice.resize(graph.V+1);
+    graph.edge.resize(graph.E);
+    //construct the graph(the vertice is 1-base)
     {
         int u, v, dist;
-        pairs up,vp;
-        for(int i = 0; i < m; i++){
+        for(int i = 0; i < graph.E; i++){
             cin >> u >> v >> dist;
-            up.name = v-1;
-            up.dist = dist;
-            vp.name = u-1;
-            vp.dist = dist;
-            vertice[u-1].child.push_back(up);
-            vertice[v-1].child.push_back(vp);
+            mypair n;
+            tripair tmpedge;
+            n.name = v;
+            n.dist = dist;
+            graph.vertice[u].child.push_back(n);
+            n.name = u;
+            graph.vertice[v].child.push_back(n);
+            tmpedge.first = u;
+            tmpedge.second = v;
+            tmpedge.dist = dist;
+            graph.edge.push_back(tmpedge);
         }
     }
-    // for(int i = 0; i < n; i++){
-    //     cerr << i <<" :\n";
-    //     for(int j = 0; j < vertice[i].child.size(); j++){
-    //         cerr << " " << vertice[i].child[j].name << " " << vertice[i].child[j].dist << "\n";
-    //     }
-    // }
-    // start dfs
-    check.resize(n, false);
-    ll ans = -1;
-    for (int i = 0; i < vertice[0].child.size(); i++) {
-        // cerr << "now at: " << vertice[0].child[i].name << "\n";
-        ll tmp = dfs(vertice[0].child[i].name, vertice, check, 0);
-        // cerr << vertice[0].child[i].name << " (" << ans << " = " << tmp << " + " << vertice[0].child[i].dist<< "\n";
-        if(ans == -1)
-            ans = tmp + vertice[0].child[i].dist;
-        else
-            ans = min(ans, tmp + vertice[0].child[i].dist);
-        // cerr << vertice[0].child[i].name << " => " << ans << "\n";
+    //initialize the graph
+    graph.vertice[1].distance = 0;
+    graph.vertice[1].roottree = 1;
+    for(int i = 2; i < graph.vertice.size(); i++){
+        graph.vertice[1].distance = LLONG_MAX;
     }
-    cout << ans << "\n";
+    for(int i = 0; i < graph.vertice[1].child.size(); i++){
+        int chiv = graph.vertice[1].child[i].name;
+        graph.vertice[chiv].distance = graph.vertice[1].child[i].dist;
+        graph.vertice[chiv].roottree = chiv;
+    }
+    //start relax
+    for(int i = 0; i < graph.vertice[1].child.size(); i++){
+        relax(graph.vertice[1].child[i].name, graph);
+    }
+    ll ans = LLONG_MAX;
+    for(int i = 0; i < graph.E; i++){
+        int first = graph.edge[i].first;
+        int second = graph.edge[i].second;
+        if(graph.vertice[first].roottree != graph.vertice[second].roottree){
+            if(first == 1 && second == graph.vertice[graph.edge[i].second].roottree)continue;
+            else if(second == 1 && first == graph.vertice[first].roottree)continue;
+            else{
+                ll chkdist = graph.vertice[graph.edge[i].first].distance + graph.vertice[graph.edge[i].second].distance + graph.edge[i].dist;
+                ans = (ans > chkdist)? chkdist: ans;
+            }
+        }
+    }
+    printgraph(graph);
+    cout << ans;
+}
+void relax(int name, graphs& graph){
+    ll mydist = graph.vertice[name].distance;
+    int childname, myroot = graph.vertice[name].roottree;
+    for(int i = 0; i < graph.vertice[name].child.size(); i++){
+        childname = graph.vertice[name].child[i].name;
+        ll chkdist = mydist + graph.vertice[name].child[i].dist;
+        if(graph.vertice[childname].distance > mydist + graph.vertice[name].child[i].dist){
+            graph.vertice[childname].distance = mydist + graph.vertice[name].child[i].dist;
+            graph.vertice[childname].roottree = myroot;
+            relax(childname, graph);
+        }
+    }
 }
 
-//ref:
+void printgraph(graphs& graph){
+    printf("vertices:\n");
+    for(int i = 1; i < graph.V; i++){
+        printf(" %d:\n", i);
+        printf("    distance: %d \n", graph.vertice[i].distance);
+
+    }
+}
+
+
+// ref:
+// 李明奕
+// 陳致和
