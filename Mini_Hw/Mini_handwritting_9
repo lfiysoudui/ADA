@@ -1,0 +1,32 @@
+struct Bellman_Ford_bǎnzi BF;
+vector<string> countries = {"TWN", "USD", "JAP", "EUR"};
+BF.init(v);
+
+//TODO 1: we add a negative in front of log so that when the number get greater, the weight will decrease, and we can find a positive circle(in the result) by finding the negative circle(in the graph). and we take log to the exchange rates so we can calculate it by addition.
+BF.void add_edge(TWN, TWN, -log(1));
+BF.void add_edge(TWN, USD, -log(0.030874));
+BF.void add_edge(TWN, JAP, -log(4.6555));
+BF.void add_edge(TWN, EUR, -log(0.028732));
+
+BF.void add_edge(USD, TWN, -log(32.287));
+BF.void add_edge(USD, USD, -log(1));
+BF.void add_edge(USD, JAP, -log(151.08));
+BF.void add_edge(USD, EUR, -log(0.93047));
+
+BF.void add_edge(JAP, TWN, -log(0.21180));
+BF.void add_edge(JAP, USD, -log(0.0065710));
+BF.void add_edge(JAP, JAP, -log(1));
+BF.void add_edge(JAP, EUR, -log(0.0061147));
+
+BF.void add_edge(EUR, TWN, -log(34.435));
+BF.void add_edge(EUR, USD, -log(1.0667));
+BF.void add_edge(EUR, JAP, -log(161.13));
+BF.void add_edge(EUR, EUR, -log(1));
+
+pair<bool, vector<string>> BFresult = BF.solve("TWN");
+
+if(BFresult.first)
+  print bfresult.second, which represent the nodes in the negative cycle
+else
+  print 10000 * 10^((-1) * (the sum of weight in the USD section in bfresult.second))
+  //since that we've let the weight of the edge be -log(exchange_rate), therefore, when sum of weight is smaller, the higher the exchange rate we can get. So we can get the maximum amount of USD we can get by calculating the things i written above.
