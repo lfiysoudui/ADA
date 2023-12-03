@@ -151,3 +151,6 @@ void relax(Graphs &input_graph)
         input_graph.reclength.push_back(input_graph.vertice[i].distance);}
 }
 
+//ref:
+// b11902027 陳思瑋
+// b11902030 王褕立
