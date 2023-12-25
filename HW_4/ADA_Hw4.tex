@@ -1,0 +1,87 @@
+\documentclass{homework}
+\author{許崴棠}
+\title{ADA Homework 4}
+
+\begin{document}
+\maketitle
+\section*{Problem 0}
+\begin{itemize}
+    \item \textbf{Problem 1:} 
+    \item \textbf{Problem 2:} 
+    \item \textbf{Problem 3:} 
+\end{itemize}
+\clearpage
+\section*{Problem 1}
+\begin{itemize}
+    \item[(a)]
+    To determine if a 2-CNF problem is in 2-SAT, we can regard the 2-CNF formula as a set of clause, take $\phi_1$ as an example we can regard $\phi_1$ as 
+    \[\phi_1 = \{(a_1\vee \lnot a_2), (a_3 \vee a_1), (\lnot a_1 \vee \lnot a_1)\}\] 
+    and by De Morgan law, we can rewrite $\phi_1$ as 
+    \[\phi_1 ' = \{\lnot(\lnot a_1 \wedge  a_2), \lnot(\lnot a_3 \wedge \lnot a_1), \lnot(a_1 \wedge a_1)\}\]
+    Consider a directed graph $G$ where $V(G) = \{a_1, a_2,\ldots,a_n, \lnot a_1, \lnot a_2,\ldots,\lnot a_n\}$. And to make $\lnot(x \wedge y)$ in $\phi_1'$ true, we can add the edge of $x \rightarrow \lnot y$ and $y \rightarrow \lnot x$ since that if $x$ is right, $\lnot y$ must be right, if  $y$ is right, $\lnot x$ must be right.
+    After then, we can find the SCCs by the kosaraju's algorithm, and we can check if a 2-CNF formula is solvable simply by checking if there exist a $a_i$ where $a_i$ and $\lnot a_i$ are in the same SCC, since if $x$ is able to reach $y$, it means that ``if $x$ is true, then $y$ must be true '', and if $a_i$ and $\lnot a_i$ are in the same SCC it means that the statement $a_i$ will be true if and only if statement $\lnot a_i$ is true, which is obviously wrong. Thus we can know that there will be at least one set of $a$ that can solve the answer, only if there is no $a_i$ and $\lnot a_i$ in the same scc.
+
+    \item[(b)] 
+    \begin{itemize}
+        \item[(b-1)]%! not done
+        % for every clause, how close is their clause(i)
+        % 3-SAT can go to this(a1,a2,a3)>(-a1,a2)&(-a2,a3)&(-a3,a1)&(-a1,a2)&(-a2,a3)&(-a3,a1)
+        % for all x(dist) in 2 sat, there can be 0.001x(dist) in 3 sat 
+        % 
+
+        \item[(b-2)]%! not done
+        
+
+    \end{itemize}
+    \item[(c)] 
+    \begin{itemize}
+        \item[(c-1)]%! not done
+        
+
+        \item[(c-2)]%! not done
+        
+
+    \end{itemize}
+\end{itemize}
+\clearpage
+
+\section*{Problem 2}
+\begin{itemize}
+    \item[(a)]
+    By observe, we can tell that after we put $\alpha$ items into the current box, we'll had to spend $2\alpha$ time to make a new box, so when we're putting new items into the box, we can save 6 dollars to the bank per item, therefore, after we put $\alpha$ items into the box with the size $2\alpha$, we can directly spend the $4\alpha$ dollars we've saved in the bank to make a new box with the size of $4\alpha$, and spend $2\alpha$ dollars to move the $2\alpha$ items in the original box. By doing this, we can say that the time complexity of putting n items into the box are $O(6n) = O(n)$. 
+    
+    \item[(b)]
+    It is impossible to amortize the time complexity to $O(n)$ because that when $n = s + 1$, we need to spend $s^2$ time to make a new box, and it would be impossible to amortize a $s^2$ step to $s$ step to make the overall time complexity $O(n)$.
+
+    \item[(c)]
+    By observe, we can tell that after we put $\alpha$ items into the current box, we'll had to spend $\alpha^2$ time to make a new box. When the box is full when we put the $i_{th}$ item into the box, we had to make sure the previous $i-\sqrt[]{i}$ items can afford the price of making new box and move the every items into the new box. So when we're moving $n^2$ items to a new box, we had to pay ${(n^2)}^2+n^2$ dollars, and it should be pay by the ${n+1}_{th}$ to ${n^2}_{th}$ items. By math, we can know that to put the if we assume every $i_{th}$ item had to pay $\alpha i +\beta$ dollars to bank. Since we already knew the first box (size 2) can be enlarge to the second box if every one put $2n$ dollars into the bank.\\
+    We had to calculate the general case, which is 
+    \[{(n^2)}^2+n^2 \leq \alpha \frac{(n^2+n+1)*(n^2-n)}{2} + \beta (n^2-n)\;\forall\; n \geq 2\]
+    where $n^2$ is the current box size.\\
+    By math, we can tell that the tightest $\alpha$ is 2 and the tightest $\beta$ is 3. Therefore, if every $i_{th}$ insert put $2i+3$ dollars into the bank, we can safely make a $n^2$ box and move the previous $n_{th}$ items into the new box only by using the ${n}^2+n$ the previous ${\sqrt[]{n}+1}_{th}$ to $n_{th}$ items had saved.
+
+    \item[(d)]
+    First, we assume the worst case, which happens when the manager come and check after every time Nathan put an item into the box.\\
+    In the cost section of the below table, it represent the (cost of insert + cost of move)\\
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            i  & cost & i  & cost & i  & cost \\\hline
+            1  & 1+0  & 6  & 1+1  & 11 & 1+1  \\\hline
+            2  & 1+1  & 7  & 1+1  & 12 & 1+1  \\\hline
+            3  & 1+3  & 8  & 1+1  & 13 & 1+1  \\\hline
+            4  & 1+1  & 9  & 1+9  & 14 & 1+1  \\\hline
+            5  & 1+5  & 10 & 1+1  & 15 & 1+1  \\\hline
+        \end{tabular}
+    \end{table}
+    By the table above, we can find out that the maximum averagetime complexity happens when we put $n=2^k+1$ item into the boxes, which can take at most $2n-1+2(2^k-1)=4n-3$ times, and we can tell the time complexity is $O(4n-3)=O(n)$.
+
+    \item[(e)] %! not done
+    
+
+\end{itemize}
+\clearpage
+
+
+\end{document}
