@@ -13,7 +13,6 @@ ll rightsum = 0;
 ll leftsum = 0;
 multiset<ll> lefttree;
 multiset<ll> righttree;
-ll *remvec;
 
 //functions
 void insert_num(ll);
@@ -24,12 +23,11 @@ void check();
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll n;
+    int n;
     ll inbuf;
     char command[5];
-    scanf("%lld", &n);
-    remvec = (ll*)malloc(n+1 * sizeof(ll));
-    for(ll i = 0; i < n; i++)
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++)
     {
         scanf("%s", command);
         if(!strcmp(command,"kiwi"))
@@ -45,10 +43,11 @@ int main(){
         else if(!strcmp(command,"wiwi"))
         {
             // cerr << "wiwi ";
-            cout << rightsum - leftsum + *lefttree.rbegin() * ((long long)lefttree.size() - (long long)righttree.size()) << "\n";
+            cout << rightsum - leftsum + *lefttree.rbegin() * ((long)lefttree.size() - (long)righttree.size()) << "\n";
         }
         else if(!strcmp(command,"kiki"))
         {
+
             scanf("%lld", &inbuf);
             merge(inbuf);
         }
@@ -98,21 +97,21 @@ void remove_num(ll num){
 void check(){
     while (righttree.size() > lefttree.size())
     {
-        auto it = righttree.begin();
+        multiset<ll>::iterator it = righttree.begin();
         ll tmpmv = *it;
         lefttree.insert(tmpmv);
         leftsum += tmpmv;
         rightsum -= tmpmv;
-        righttree.erase(it);
+        righttree.erase(righttree.find(tmpmv));
     }
     while (lefttree.size() > righttree.size()+1)
     {
-        auto it = lefttree.rbegin();
+        multiset<ll>::reverse_iterator it = lefttree.rbegin();
         ll tmpmv = *it;
         righttree.insert(tmpmv);
         rightsum += tmpmv;
         leftsum -= tmpmv;
-        lefttree.erase(--it.base()); //?
+        lefttree.erase(lefttree.find(tmpmv));
     }
 }
 
@@ -127,20 +126,21 @@ void merge(ll k){
         lefttree.insert(leftsum);
         return;
     }
-    for(ll i = 0; i <= k; i++) remvec[i] = 0; 
     if(k >= lefttree.size()){
         ll tomodify = lefttree.size() + righttree.size() - k;
+        vector<ll> remvec;
+        remvec.resize(tomodify,0);
         // cerr << "tomodify = " << tomodify << "\n";
         for(ll i = 0; i < tomodify; i++)
         {
-            auto it = lefttree.begin();
+            multiset<ll>::iterator it = lefttree.begin();
             remvec[i] += *it;
             leftsum -= *it;
             lefttree.erase(it);
         }
         for(ll i = tomodify; i > 0; i--)
         {
-            auto itr = righttree.rbegin();
+            multiset<ll>::reverse_iterator itr = righttree.rbegin();
             remvec[i-1] += *itr;
             rightsum -= *itr;
             righttree.erase(--itr.base());
@@ -150,27 +150,28 @@ void merge(ll k){
             righttree.insert(remvec[i]);
         }
         check();
-        return;
     }
     else
     {
-        ll ct = 0;
-
-    cerr << "ok\n";
-        for(auto it = lefttree.begin(); it != lefttree.end(); it++)
+        vector<ll> remvec;
+        remvec.resize(k,0);
+        ll ct = k;
+        for(auto it = righttree.rbegin(); it != righttree.rend(); it++)
         {
+            ct--;
             // cerr << "remvec[" << ct << "]+=" << *it<< "\n";
-            cerr << "ct="<< ct <<"k= "<< k <<"\n";
-            remvec[ct%k] += *it;
-            ct++;
-            cerr << "ct="<< ct <<"k= "<< k <<"\n";
+            remvec[ct] += *it;
+            if(ct == 0) ct = k;
         }
-
-        for(auto it = righttree.begin(); it != righttree.end(); it++)
+        // cerr << "input right\n";
+        // for(ll i:remvec) cerr << i << " ";
+        // cerr << "\n";
+        for(auto it = lefttree.rbegin(); it != lefttree.rend(); it++)
         {
+            ct--;
             // cerr << "remvec[" << ct << "]+=" << *it<< "\n";
-            remvec[ct%k] += *it;
-            ct++;
+            remvec[ct] += *it;
+            if(ct == 0) ct = k;
         }
         // for(ll i:remvec) cerr << i << " ";
         // cerr << "\n";
@@ -178,10 +179,15 @@ void merge(ll k){
         righttree.clear();
         leftsum = 0;
         rightsum = 0;
-        for(ll i = 0; i < k; i++)
+        for(ll i = 0; i < k/2; i++)
         {
             lefttree.insert(remvec[i]);
             leftsum += remvec[i];
+        }
+        for(ll i = k/2; i < k; i++)
+        {
+            righttree.insert(remvec[i]);
+            rightsum += remvec[i];
         }
         check();
     }
