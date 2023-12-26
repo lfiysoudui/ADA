@@ -42,7 +42,6 @@ int main(){
         }
         else if(!strcmp(command,"wiwi"))
         {
-            // cerr << "wiwi ";
             cout << rightsum - leftsum + *lefttree.rbegin() * ((long)lefttree.size() - (long)righttree.size()) << "\n";
         }
         else if(!strcmp(command,"kiki"))
@@ -52,14 +51,6 @@ int main(){
             merge(inbuf);
         }
         else cerr << "wrong command\n";
-
-        // cerr << "seq= ";
-        // for (auto it = lefttree.begin(); it != lefttree.end(); it++)
-        //     cerr << *it << " ";
-        // cerr << "| ";
-        // for (auto it = righttree.begin(); it != righttree.end(); it++)
-        //     cerr << *it << " ";
-        // cerr << "(" << leftsum << ", " << rightsum << ")\n";
     }
 }
 
@@ -130,7 +121,6 @@ void merge(ll k){
         ll tomodify = lefttree.size() + righttree.size() - k;
         vector<ll> remvec;
         remvec.resize(tomodify,0);
-        // cerr << "tomodify = " << tomodify << "\n";
         for(ll i = 0; i < tomodify; i++)
         {
             multiset<ll>::iterator it = lefttree.begin();
@@ -159,22 +149,15 @@ void merge(ll k){
         for(auto it = righttree.rbegin(); it != righttree.rend(); it++)
         {
             ct--;
-            // cerr << "remvec[" << ct << "]+=" << *it<< "\n";
             remvec[ct] += *it;
             if(ct == 0) ct = k;
         }
-        // cerr << "input right\n";
-        // for(ll i:remvec) cerr << i << " ";
-        // cerr << "\n";
         for(auto it = lefttree.rbegin(); it != lefttree.rend(); it++)
         {
             ct--;
-            // cerr << "remvec[" << ct << "]+=" << *it<< "\n";
             remvec[ct] += *it;
             if(ct == 0) ct = k;
         }
-        // for(ll i:remvec) cerr << i << " ";
-        // cerr << "\n";
         lefttree.clear();
         righttree.clear();
         leftsum = 0;
